@@ -1,0 +1,23 @@
+name: "set-status"
+version: "0.1.0"
+usage: "helm set-status RELEASE STATUS"
+description: "Set the status of a Helm release"
+ignoreFlags: false
+platformCommand:
+  - os: darwin
+    arch: amd64
+    command: "$HELM_PLUGIN_DIR/bin/helm-set-status"
+  - os: darwin
+    arch: arm64
+    command: "$HELM_PLUGIN_DIR/bin/helm-set-status"
+  - os: linux
+    arch: amd64
+    command: "$HELM_PLUGIN_DIR/bin/helm-set-status"
+  - os: linux
+    arch: arm64
+    command: "$HELM_PLUGIN_DIR/bin/helm-set-status"
+  - os: windows
+    arch: amd64
+    command: "$HELM_PLUGIN_DIR/bin/helm-set-status.exe"
+hooks:
+  install: "scripts/install.sh"
