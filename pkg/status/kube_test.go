@@ -18,8 +18,8 @@ func TestNewRESTClientGetter(t *testing.T) {
 func TestRESTClientGetter_ToRawKubeConfigLoader(t *testing.T) {
 	t.Run("with default settings", func(t *testing.T) {
 		// Clear environment variables
-		os.Unsetenv("KUBECONFIG")
-		os.Unsetenv("HELM_KUBECONTEXT")
+		_ = os.Unsetenv("KUBECONFIG")
+		_ = os.Unsetenv("HELM_KUBECONTEXT")
 
 		getter := NewRESTClientGetter("default")
 		loader := getter.ToRawKubeConfigLoader()
@@ -27,8 +27,8 @@ func TestRESTClientGetter_ToRawKubeConfigLoader(t *testing.T) {
 	})
 
 	t.Run("with KUBECONFIG set", func(t *testing.T) {
-		os.Setenv("KUBECONFIG", "/tmp/test-kubeconfig")
-		defer os.Unsetenv("KUBECONFIG")
+		_ = os.Setenv("KUBECONFIG", "/tmp/test-kubeconfig")
+		defer func() { _ = os.Unsetenv("KUBECONFIG") }()
 
 		getter := NewRESTClientGetter("default")
 		loader := getter.ToRawKubeConfigLoader()
@@ -36,8 +36,8 @@ func TestRESTClientGetter_ToRawKubeConfigLoader(t *testing.T) {
 	})
 
 	t.Run("with HELM_KUBECONTEXT set", func(t *testing.T) {
-		os.Setenv("HELM_KUBECONTEXT", "test-context")
-		defer os.Unsetenv("HELM_KUBECONTEXT")
+		_ = os.Setenv("HELM_KUBECONTEXT", "test-context")
+		defer func() { _ = os.Unsetenv("HELM_KUBECONTEXT") }()
 
 		getter := NewRESTClientGetter("default")
 		loader := getter.ToRawKubeConfigLoader()
@@ -45,11 +45,11 @@ func TestRESTClientGetter_ToRawKubeConfigLoader(t *testing.T) {
 	})
 
 	t.Run("with both KUBECONFIG and HELM_KUBECONTEXT set", func(t *testing.T) {
-		os.Setenv("KUBECONFIG", "/tmp/test-kubeconfig")
-		os.Setenv("HELM_KUBECONTEXT", "test-context")
+		_ = os.Setenv("KUBECONFIG", "/tmp/test-kubeconfig")
+		_ = os.Setenv("HELM_KUBECONTEXT", "test-context")
 		defer func() {
-			os.Unsetenv("KUBECONFIG")
-			os.Unsetenv("HELM_KUBECONTEXT")
+			_ = os.Unsetenv("KUBECONFIG")
+			_ = os.Unsetenv("HELM_KUBECONTEXT")
 		}()
 
 		getter := NewRESTClientGetter("custom-ns")
@@ -60,8 +60,8 @@ func TestRESTClientGetter_ToRawKubeConfigLoader(t *testing.T) {
 
 func TestRESTClientGetter_ToRESTConfig_Error(t *testing.T) {
 	// This will fail because there's no valid kubeconfig
-	os.Setenv("KUBECONFIG", "/nonexistent/kubeconfig")
-	defer os.Unsetenv("KUBECONFIG")
+	_ = os.Setenv("KUBECONFIG", "/nonexistent/kubeconfig")
+	defer func() { _ = os.Unsetenv("KUBECONFIG") }()
 
 	getter := NewRESTClientGetter("default")
 	_, err := getter.ToRESTConfig()
@@ -70,8 +70,8 @@ func TestRESTClientGetter_ToRESTConfig_Error(t *testing.T) {
 
 func TestRESTClientGetter_ToDiscoveryClient_Error(t *testing.T) {
 	// This will fail because there's no valid kubeconfig
-	os.Setenv("KUBECONFIG", "/nonexistent/kubeconfig")
-	defer os.Unsetenv("KUBECONFIG")
+	_ = os.Setenv("KUBECONFIG", "/nonexistent/kubeconfig")
+	defer func() { _ = os.Unsetenv("KUBECONFIG") }()
 
 	getter := NewRESTClientGetter("default")
 	_, err := getter.ToDiscoveryClient()
@@ -80,8 +80,8 @@ func TestRESTClientGetter_ToDiscoveryClient_Error(t *testing.T) {
 
 func TestRESTClientGetter_ToRESTMapper_Error(t *testing.T) {
 	// This will fail because there's no valid kubeconfig
-	os.Setenv("KUBECONFIG", "/nonexistent/kubeconfig")
-	defer os.Unsetenv("KUBECONFIG")
+	_ = os.Setenv("KUBECONFIG", "/nonexistent/kubeconfig")
+	defer func() { _ = os.Unsetenv("KUBECONFIG") }()
 
 	getter := NewRESTClientGetter("default")
 	_, err := getter.ToRESTMapper()
@@ -119,8 +119,8 @@ users:
 
 func TestRESTClientGetter_ToRESTConfig_Success(t *testing.T) {
 	kubeconfigPath := createTestKubeconfig(t)
-	os.Setenv("KUBECONFIG", kubeconfigPath)
-	defer os.Unsetenv("KUBECONFIG")
+	_ = os.Setenv("KUBECONFIG", kubeconfigPath)
+	defer func() { _ = os.Unsetenv("KUBECONFIG") }()
 
 	getter := NewRESTClientGetter("default")
 	config, err := getter.ToRESTConfig()
@@ -131,8 +131,8 @@ func TestRESTClientGetter_ToRESTConfig_Success(t *testing.T) {
 
 func TestRESTClientGetter_ToDiscoveryClient_Success(t *testing.T) {
 	kubeconfigPath := createTestKubeconfig(t)
-	os.Setenv("KUBECONFIG", kubeconfigPath)
-	defer os.Unsetenv("KUBECONFIG")
+	_ = os.Setenv("KUBECONFIG", kubeconfigPath)
+	defer func() { _ = os.Unsetenv("KUBECONFIG") }()
 
 	getter := NewRESTClientGetter("default")
 	client, err := getter.ToDiscoveryClient()
@@ -143,8 +143,8 @@ func TestRESTClientGetter_ToDiscoveryClient_Success(t *testing.T) {
 
 func TestRESTClientGetter_ToRESTMapper_Success(t *testing.T) {
 	kubeconfigPath := createTestKubeconfig(t)
-	os.Setenv("KUBECONFIG", kubeconfigPath)
-	defer os.Unsetenv("KUBECONFIG")
+	_ = os.Setenv("KUBECONFIG", kubeconfigPath)
+	defer func() { _ = os.Unsetenv("KUBECONFIG") }()
 
 	getter := NewRESTClientGetter("default")
 	mapper, err := getter.ToRESTMapper()

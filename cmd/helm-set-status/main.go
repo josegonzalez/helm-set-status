@@ -88,16 +88,16 @@ func runWithConfigFactory(cmd *cobra.Command, args []string, rev int, fromStatus
 	if err := status.SetStatus(cfg, releaseName, targetStatus, rev, allowedFromStatuses); err != nil {
 		var precondErr *status.PreconditionError
 		if errors.As(err, &precondErr) && noFail {
-			fmt.Fprintf(cmd.OutOrStdout(), "Skipped: %s\n", err)
+			_, _ = fmt.Fprintf(cmd.OutOrStdout(), "Skipped: %s\n", err)
 			return nil
 		}
 		return err
 	}
 
 	if rev > 0 {
-		fmt.Fprintf(cmd.OutOrStdout(), "Release %q revision %d status set to %q\n", releaseName, rev, statusStr)
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "Release %q revision %d status set to %q\n", releaseName, rev, statusStr)
 	} else {
-		fmt.Fprintf(cmd.OutOrStdout(), "Release %q status set to %q\n", releaseName, statusStr)
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "Release %q status set to %q\n", releaseName, statusStr)
 	}
 	return nil
 }
