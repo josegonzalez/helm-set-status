@@ -19,5 +19,8 @@ platformCommand:
   - os: windows
     arch: amd64
     command: "$HELM_PLUGIN_DIR/bin/helm-set-status.exe"
-hooks:
-  install: "scripts/install.sh"
+platformHooks:
+  install:
+    - command: "${HELM_PLUGIN_DIR}/scripts/install.sh"
+  update:
+    - command: "${HELM_PLUGIN_DIR}/scripts/install.sh"
