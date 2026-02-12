@@ -200,8 +200,9 @@ func TestRunWithConfigFactory_ReleaseNotFound(t *testing.T) {
 	cmd.SetErr(&buf)
 
 	err := runWithConfigFactory(cmd, []string{"non-existent", "failed"}, 0, nil, false, configFactory)
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "failed to get release")
+	require.NoError(t, err)
+	assert.Contains(t, buf.String(), "Warning")
+	assert.Contains(t, buf.String(), "non-existent")
 }
 
 func TestRun_UsesConfigurationFactory(t *testing.T) {
