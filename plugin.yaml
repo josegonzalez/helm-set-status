@@ -1,5 +1,5 @@
 name: "set-status"
-version: "0.1.2"
+version: "0.2.0"
 usage: "helm set-status RELEASE STATUS"
 description: "Set the status of a Helm release"
 ignoreFlags: false
