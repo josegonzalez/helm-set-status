@@ -8,6 +8,15 @@ import (
 	helmtime "helm.sh/helm/v3/pkg/time"
 )
 
+// ReleaseNotFoundError is returned when a release is not found in storage.
+type ReleaseNotFoundError struct {
+	ReleaseName string
+}
+
+func (e *ReleaseNotFoundError) Error() string {
+	return fmt.Sprintf("release %q not found", e.ReleaseName)
+}
+
 // PreconditionError is returned when a precondition check fails.
 type PreconditionError struct {
 	CurrentStatus   release.Status
@@ -47,7 +56,7 @@ func SetStatus(cfg *action.Configuration, releaseName string, status release.Sta
 		// Get latest release from storage
 		rel, err = cfg.Releases.Last(releaseName)
 		if err != nil {
-			return fmt.Errorf("failed to get release %s: %w", releaseName, err)
+			return &ReleaseNotFoundError{ReleaseName: releaseName}
 		}
 	}
 

@@ -79,6 +79,11 @@ helm set-status my-release deployed --from pending-upgrade --no-fail
 # If current status is "pending-upgrade": changes to deployed, exits 0
 ```
 
+## Behavior
+
+- If the specified release does not exist, the plugin prints a warning and exits 0 (no error).
+- If `--from` is specified and the current status does not match, the plugin exits 1 unless `--no-fail` is set.
+
 ## Use Cases
 
 - **Recovery from stuck releases**: Fix releases stuck in `pending-install`, `pending-upgrade`, or `pending-rollback` states

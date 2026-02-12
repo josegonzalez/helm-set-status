@@ -249,7 +249,7 @@ func TestSetStatus(t *testing.T) {
 		}
 	})
 
-	t.Run("fails for non-existent release", func(t *testing.T) {
+	t.Run("returns ReleaseNotFoundError for non-existent release", func(t *testing.T) {
 		mem := driver.NewMemory()
 		store := storage.Init(mem)
 
@@ -257,7 +257,10 @@ func TestSetStatus(t *testing.T) {
 
 		err := SetStatus(cfg, "non-existent", release.StatusFailed, 0, nil)
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "failed to get release")
+
+		var notFoundErr *ReleaseNotFoundError
+		assert.True(t, errors.As(err, &notFoundErr), "error should be *ReleaseNotFoundError")
+		assert.Equal(t, "non-existent", notFoundErr.ReleaseName)
 	})
 
 	t.Run("fails for non-existent revision", func(t *testing.T) {

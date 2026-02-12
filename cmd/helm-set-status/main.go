@@ -86,6 +86,11 @@ func runWithConfigFactory(cmd *cobra.Command, args []string, rev int, fromStatus
 
 	// Set the status
 	if err := status.SetStatus(cfg, releaseName, targetStatus, rev, allowedFromStatuses); err != nil {
+		var notFoundErr *status.ReleaseNotFoundError
+		if errors.As(err, &notFoundErr) {
+			_, _ = fmt.Fprintf(cmd.OutOrStdout(), "Warning: release %q not found, skipping\n", releaseName)
+			return nil
+		}
 		var precondErr *status.PreconditionError
 		if errors.As(err, &precondErr) && noFail {
 			_, _ = fmt.Fprintf(cmd.OutOrStdout(), "Skipped: %s\n", err)
